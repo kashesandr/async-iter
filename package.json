@@ -1,5 +1,5 @@
 {
-  "name": "async-iterator",
+  "name": "async-iter",
   "version": "1.0.0",
   "description": "Wrapper over JS iterator, which allows filter/map/etc with chaining",
   "main": "index.js",

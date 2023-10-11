@@ -1,0 +1,37 @@
+{
+  "name": "async-iter",
+  "version": "1.0.0",
+  "description": "Wrapper over JS iterator, which allows filter/map/etc with chaining",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require ts-node/register src/**/*.spec.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kashesandr/async-iter.git"
+  },
+  "keywords": [
+    "iterator",
+    "iterable",
+    "wrapper",
+    "js",
+    "ts",
+    "javascript",
+    "typescript",
+    "async"
+  ],
+  "author": "kashesandr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kashesandr/async-iter/issues"
+  },
+  "homepage": "https://github.com/kashesandr/async-iter#readme",
+  "devDependencies": {
+    "@types/chai": "^4.3.7",
+    "@types/mocha": "^10.0.2",
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

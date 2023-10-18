@@ -11,7 +11,7 @@ describe('AsyncIter', () => {
         })();
         const asyncIter = new AsyncIter(sourceIter);
 
-        const filteredIter = asyncIter.filter((item) => item % 2 === 0);
+        const filteredIter = asyncIter.filter<number>((item) => item % 2 === 0);
 
         const result = [];
         for await (const item of filteredIter) {
@@ -29,7 +29,7 @@ describe('AsyncIter', () => {
         })();
         const asyncIter = new AsyncIter(sourceIter);
 
-        const mappedIter = asyncIter.map((item) => item * 2);
+        const mappedIter = asyncIter.map<number, number>((item) => item * 2);
 
         const result = [];
         for await (const item of mappedIter) {
@@ -47,7 +47,7 @@ describe('AsyncIter', () => {
         })();
         const asyncIter = new AsyncIter(sourceIter);
 
-        const mappedIter = asyncIter.mapAsync(async (item) => item * 2);
+        const mappedIter = asyncIter.mapAsync<number, number>(async (item) => item * 2);
 
         const result = [];
         for await (const item of mappedIter) {
@@ -75,6 +75,22 @@ describe('AsyncIter', () => {
         expect(result).to.deep.equal([[0, 'a'], [1, 'b'], [2, 'c']]);
     });
 
+    it('should pairwise items correctly', async () => {
+        const sourceIter = (async function* () {
+            for await (const item of [1, 2, 3, 4, 5]) {
+                yield item;
+            }
+        })();
+        const asyncIter = new AsyncIter(sourceIter);
+        const resultIter = asyncIter.pairwise<number>();
+        const result = [];
+        for await (const item of resultIter) {
+            result.push(item);
+        }
+
+        expect(result).to.deep.equal([[1,2],[2,3],[3,4],[4,5]]);
+    });
+
     it('should correctly manage combination of operators', async () => {
         const sourceIter = (async function* () {
             for await (const item of [1, 2, 3, 4, 5]) {
@@ -85,11 +101,11 @@ describe('AsyncIter', () => {
 
         const iter =
             asyncIter
-                .filter((item) => item % 2 === 0)
-                .filter((item) => item > 2)
-                .map((item) => item * 2)
-                .map((item) => item + 1)
-                .mapAsync(async (item) => item / 3)
+                .filter<number>((item) => item % 2 === 0)
+                .filter<number>((item) => item > 2)
+                .map<number, number>((item) => item * 2)
+                .map<number, number>((item) => item + 1)
+                .mapAsync<number, number>(async (item) => item / 3)
         ;
 
         const result = [];
@@ -100,4 +116,5 @@ describe('AsyncIter', () => {
         expect(result).to.deep.equal([3]);
 
     });
+
 });

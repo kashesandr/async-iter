@@ -11,7 +11,7 @@ export class AsyncIter<T> {
         yield * this.asyncIter;
     }
 
-    filter<K>(filterFn: (item: K) => boolean): AsyncIter<K> {
+    filter<INPUT>(filterFn: (item: INPUT) => boolean): AsyncIter<INPUT> {
         const { asyncIter } = this;
         const newIter = (async function* () {
             // @ts-ignore
@@ -21,10 +21,10 @@ export class AsyncIter<T> {
                 }
             }
         })();
-        return new AsyncIter<K>(newIter);
+        return new AsyncIter<INPUT>(newIter);
     }
 
-    map<K, L>(mapFn: (item: K) => L): AsyncIter<L> {
+    map<INPUT, OUTPUT>(mapFn: (item: INPUT) => OUTPUT): AsyncIter<OUTPUT> {
         const { asyncIter } = this;
         const newIter = (async function* () {
             // @ts-ignore
@@ -32,10 +32,10 @@ export class AsyncIter<T> {
                 yield mapFn(item);
             }
         })();
-        return new AsyncIter<L>(newIter);
+        return new AsyncIter<OUTPUT>(newIter);
     }
 
-    mapAsync<K, L>(mapFnAsync: (item: K) => Promise<L>): AsyncIter<L> {
+    mapAsync<INPUT, OUTPUT>(mapFnAsync: (item: INPUT) => Promise<OUTPUT>): AsyncIter<OUTPUT> {
         const { asyncIter } = this;
         const newIter = (async function* () {
             // @ts-ignore
@@ -43,10 +43,10 @@ export class AsyncIter<T> {
                 yield await mapFnAsync(item);
             }
         })();
-        return new AsyncIter<L>(newIter);
+        return new AsyncIter<OUTPUT>(newIter);
     }
 
-    enumerate<K>(): AsyncIter<[number, K][]> {
+    enumerate<INPUT>(): AsyncIter<[number, INPUT][]> {
         const { asyncIter } = this;
         const newIter = (async function* () {
             let i = 0;
@@ -55,6 +55,21 @@ export class AsyncIter<T> {
                 yield [i++, item];
             }
         })();
-        return new AsyncIter<[number, K][]>(newIter);
+        return new AsyncIter<[number, INPUT][]>(newIter);
+    }
+
+    pairwise<INPUT>(): AsyncIter<[INPUT, INPUT][]> {
+        const { asyncIter } = this;
+        const newIter = (async function* (){
+            let current = await asyncIter.next();
+            if (current.done) return;
+            let next = await asyncIter.next();
+            while (!next.done) {
+                yield [current.value, next.value];
+                current = next;
+                next = await asyncIter.next();
+            }
+        })();
+        return new AsyncIter<[INPUT, INPUT][]>(newIter);
     }
 }

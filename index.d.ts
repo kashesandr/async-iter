@@ -1,3 +1,3 @@
-import { type AsyncIter} from "./src/async-iter";
+import { AsyncIter} from "./src/async-iter";
 
 export default AsyncIter;
